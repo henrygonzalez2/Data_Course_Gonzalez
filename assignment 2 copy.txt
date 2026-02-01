@@ -1,0 +1,118 @@
+﻿ I used 
+
+> setwd("/Users/brisket/Desktop/Data_Course/Data/")
+
+To change the working directory of the project to the data course files.
+
+> getwd() allows me to verify which directory I am in
+
+I then used
+
+> list.files()
+
+To verify that I am in the right directory 
+
+> list.files(pattern = "\\.csv$")
+
+Lists all of the csv files
+
+Objects can be created using a "<-"
+
+csv_files <- list.files(pattern = "\\.csv$")
+
+To verify that our object csv_files contains the list of files, we can use
+
+> print(csv_files)
+ 
+This is my output:
+ [1] "1620_scores.csv"              "1620_YC_Points.csv"          
+ [3] "BioLog_Plate_Data.csv"        "Bird_Measurements.csv"       
+ [5] "cleaned_bird_data.csv"        "EDA1.csv"                    
+ [7] "EDA2.csv"                     "FacultySalaries_1995.csv"    
+ [9] "Fake_grade_data.csv"          "GradSchool_Admissions.csv"   
+[11] "iris.csv"                     "ITS_mapping.csv"             
+[13] "Juniper_Oils.csv"             "landdata-states.csv"         
+[15] "long_and_tidy.csv"            "MLO_Metadata.csv"            
+[17] "MLO_OTU_Table.csv"            "mushroom_growth.csv"         
+[19] "non_linear_relationship.csv"  "nyc_license.csv"             
+[21] "practice_data_1.csv"          "practice_data_2.csv"         
+[23] "practice_data_3.csv"          "qwerty.csv"                  
+[25] "Soil_Predators.csv"           "thatch_ant.csv"              
+[27] "traitdatabygenus.csv"         "traitdatabysp.csv"           
+[29] "Utah_Religions_by_County.csv" "wide_income_rent.csv"        
+[31] "wide_rent_income.csv"         "wingspan_vs_mass.csv" 
+
+
+> length(csv_files) 
+[1] 32
+
+After importing the wingspan_vs_mass.csv using the GUI, I created an object storing the data within the file.
+
+> df <- read.csv("wingspan_vs_mass.csv")
+
+head(df) will return the first 6 lines by default. If we want a certain amount of line, we can use:
+> head(df, n = 5L)
+  X observation wingspan     mass velocity  variety
+1 1           1 29.40183 73.70401 18.64377  African
+2 2           2 32.80786 74.20540 20.92118  African
+3 3           3 32.47062 85.29320 17.89050 European
+4 4           4 26.39006 55.63588 22.06067  African
+5 5           5 25.17541 59.70067 21.95181 European
+
+
+> list.files(pattern = "^b", full.names = TRUE, recursive = TRUE)
+
+The ^ makes sure that files starting with the lowercase b are selected
+
+
+Gives us files that start with the letter b
+
+> b_csv <- list.files(pattern = "^b", full.names = TRUE, recursive = TRUE)
+
+Allows us to create an object that contains the names of all the file paths.
+
+
+
+This is the command used to return the head of each file within the list
+
+> for (fp in b_csv) {print(head(read.csv(fp), n=1))}
+
+This is the output:
+                COMMON.NAME..basilisk
+1 CLASSIFICATION: basiliscus vulgaris
+             COMPND......BENZALDEHYDE
+1 AUTHOR      DAVE WOODCOCK  96 07 05
+             DOB_Male DaysAlive_Male IQ_Male Pass_Female          DOB_Female DaysAlive_Female IQ_Female
+1 1990-05-19 11:13:20       10732.28      99         Yes 1990-02-19 01:46:40         10821.63       125
+  Pass_Female.1
+1           Yes
+
+> for (csv in list.files(pattern = "*.csv$")) {print(head(read.csv(csv), n=1))}
+
+Gives a very long output.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
