@@ -1,0 +1,13 @@
+
+1.
+The predicted GrowthRate values in the 10-40 range of Light + Nitrogen are not optimal because these points are lost in a sea of real life data collected, which represents a less than ideal model of our data.
+
+2.
+Growthrate based on Light and GrowthRate based on Light + Nitrogen were non-linear 
+
+
+https://www.geeksforgeeks.org/r-language/non-linear-regression-in-r/
+
+3.
+> mod2 = lm(GrowthRate ~ Light, data = mushroom)
+  summary(mod2)
