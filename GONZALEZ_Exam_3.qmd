@@ -1,0 +1,142 @@
+---
+title: "exam3"
+format:
+  html:
+    embed-resources: true
+editor: visual
+---
+
+---
+
+---
+title: "exam3"
+format:
+  html:
+    embed-resources: true
+---
+
+## 1
+
+After using the setwd() command to set the wd to the Exam_3 folder:
+
+```{r}
+sal<-read.csv("FacultySalaries_1995.csv")
+```
+
+converting into long format
+
+```{r}
+library(tidyverse)
+
+sal_tidy <- sal %>%
+  pivot_longer(
+    cols = c(AvgFullProfSalary, AvgAssocProfSalary, AvgAssistProfSalary),
+    names_to = "Rank",
+    values_to = "Salary"
+  ) %>%
+  mutate(
+    Rank = recode(Rank,
+                  "AvgFullProfSalary" = "Full",
+                  "AvgAssocProfSalary" = "Associate",
+                  "AvgAssistProfSalary" = "Assistant")
+  )
+
+```
+
+\
+Filter VIIB out from dataset
+
+```{r}
+sal_tidy_filtered <- sal_tidy %>%
+  filter(Tier != "VIIB")
+```
+
+create plot where Tier is sorted by color\
+
+```{r}
+ggplot(sal_tidy_filtered, aes(x = Rank, y = Salary, fill = Tier)) +
+  geom_boxplot() +
+  labs(title = "Salary by Rank (Colored by Tier)")
+```
+
+# 2
+
+```{r}
+model <- aov(Salary ~ State + Tier + Rank, data = sal_tidy_filtered)
+
+summary(model)
+```
+
+# 3
+
+```{r}
+  juniper<-read.csv("Juniper_Oils.csv")
+```
+
+Y is concentration, X is years since burn, and we want the graph to be faceted according to each Chemical ID using free Y-axis scales
+
+Convert to long format
+
+```{r}
+juniper_long <- juniper %>%
+  pivot_longer(
+    cols = -c(SampleID, Project, Amplicon, Tree_Species, BurnYear,
+              Latitude, Longitude, Field_Office, BLM_Fire_Name,
+              Tracking_Number, Yield_percent, Bolt_Surface_Area_cm2,
+              Raw_Exit_Holes_per_cm2, Raw_Exit_Holes,
+              Living_Larvae, ChemTotal, ChemMean, YearsSinceBurn),
+    names_to = "Compound",
+    values_to = "Concentration"
+  )
+```
+
+# 4
+
+graphing it using ggplot
+
+```{r}
+library(ggplot2)
+ggplot(juniper_long, aes(x = YearsSinceBurn, y = Concentration)) +
+  geom_line() +
+  geom_smooth(span = 0.4) +
+  facet_wrap(~Compound,scales = "free_y")
+```
+
+# 5
+
+Load pkg's
+
+```{r}
+
+library(tidyverse)
+library(broom)
+```
+
+filter out nonpositives for gamma model requirement\
+\
+
+```{r}
+juniper_long <- juniper_long %>%
+  filter(Concentration > 0)
+```
+
+Create a generalized linear model where concentration is analyzed as a function of
+
+```{r}
+results <- juniper_long %>%
+  group_by(Compound) %>%
+  do(broom::tidy(glm(Concentration ~ YearsSinceBurn,
+                     data = .,
+                     family = Gamma(link = "log"))))
+
+results <- results %>%
+  filter(term == "YearsSinceBurn")
+```
+
+\
+filter data frame to isolate statistically significant p-values
+
+```{r}
+sig_results <- results %>%
+  filter(p.value < 0.05)
+```
